@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-Time Cryptocurrency Prices</title>
+    <style>
+      /* Global Styles */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      /* Container Styles */
+      .container {
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 30px;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      /* Heading Styles */
+      h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      /* Cryptocurrency Price Box */
+      .crypto-price {
+        padding: 15px;
+        margin: 10px 0;
+        background-color: #f9fafb;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #1a202c;
+        transition: background-color 0.3s ease;
+      }
+
+      /* Hover Effect */
+      .crypto-price:hover {
+        background-color: #edf2f7;
+      }
+
+      /* Specific Colors for Each Cryptocurrency */
+      #btc-price {
+        color: #f2a900; /* Bitcoin gold */
+      }
+      #eth-price {
+        color: #3c3c3d; /* Ethereum gray */
+      }
+      #xrp-price {
+        color: #346aa9; /* Ripple blue */
+      }
+
+      /* Footer */
+      .footer {
+        font-size: 12px;
+        color: #718096;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Real-Time Cryptocurrency Prices</h1>
+      <div class="crypto-price" id="btc-price">BTC: Loading...</div>
+      <div class="crypto-price" id="eth-price">ETH: Loading...</div>
+      <div class="crypto-price" id="xrp-price">XRP: Loading...</div>
+
+      <div class="footer">Updated every 5 seconds</div>
+    </div>
+
+    <script>
+      const eventSource = new EventSource(
+        "http://localhost:3000/crypto-prices"
+      );
+
+      eventSource.onmessage = function (event) {
+        const prices = JSON.parse(event.data);
+        document.getElementById(
+          "btc-price"
+        ).textContent = `BTC: $${prices.BTC}`;
+        document.getElementById(
+          "eth-price"
+        ).textContent = `ETH: $${prices.ETH}`;
+        document.getElementById(
+          "xrp-price"
+        ).textContent = `XRP: $${prices.XRP}`;
+      };
+
+      eventSource.onerror = function () {
+        console.error("Error with event source connection.");
+        eventSource.close();
+      };
+    </script>
+  </body>
+</html>
